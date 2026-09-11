@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { ExternalLink, MapPin, Phone } from "lucide-react";
-import type { ZarContact, ZarContent, ZarInvitation } from "@/lib/zar/types";
+import type { ZarContact, ZarContent } from "@/lib/zar/types";
 import { digitsOnly, formatDateTime, galleryUrls, splitDate, text } from "@/lib/zar/format";
 import { WarpField } from "./WarpField";
 import { WovenBorder } from "./WovenBorder";
@@ -8,7 +8,7 @@ import { Medallion } from "./Medallion";
 import { Panel, Section, SectionTitle } from "./Panel";
 import { Rsvp } from "./Rsvp";
 import { MusicToggle } from "./MusicToggle";
-import { QrPanel } from "./QrPanel";
+
 import { useInView } from "./useInView";
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -26,13 +26,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-export function Invitation({
-  content,
-  invitation,
-}: {
-  content: ZarContent;
-  invitation?: ZarInvitation | null;
-}) {
+export function Invitation({ content }: { content: ZarContent }) {
   const reduced = useReducedMotion();
   const groom = text(content.groom_name);
   const bride = text(content.bride_name);
@@ -44,7 +38,7 @@ export function Invitation({
   const contacts = (content.contacts ?? []).filter((c) => text(c?.phone)).slice(0, 2);
   const musicEnabled = content.music_enabled !== false;
   const musicUrl = text(content.music_url);
-  const publicUrl = text(invitation?.public_url);
+
   const groomParents = text(content.groom_parents);
   const brideParents = text(content.bride_parents);
   const message = text(content.message);
@@ -292,17 +286,7 @@ export function Invitation({
         <Rsvp />
       </Section>
 
-      {/* QR */}
-      {publicUrl ? (
-        <Section>
-          <SectionTitle>Scan &amp; share</SectionTitle>
-          <Reveal>
-            <Panel className="mt-6">
-              <QrPanel url={publicUrl} label={content.qr_label ?? null} />
-            </Panel>
-          </Reveal>
-        </Section>
-      ) : null}
+      {/* QR intentionally omitted on the live public invitation (PUBLIC_INVITATION_INTEGRATION §Design requirements) */}
 
       {/* 10. Completed carpet */}
       <section className="px-5 pb-20 pt-6">

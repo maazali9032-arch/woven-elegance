@@ -88,7 +88,7 @@ function InvitationRoute() {
 
   return (
     <>
-      <Invitation content={result.content} invitation={result.invitation ?? null} />
+      <Invitation content={result.content} />
       <BrandTicker brandName={result.brand_name ?? null} />
     </>
   );
