@@ -45,7 +45,8 @@ export interface ZarContent {
   events?: ZarEvent[] | null;
   venue?: ZarVenue | null;
   gallery?: (string | { url?: string | null; image_url?: string | null })[] | null;
-  music?: { enabled?: boolean | null; url?: string | null; title?: string | null } | null;
+  music_enabled?: boolean | null;
+  music_url?: string | null;
   contacts?: ZarContact[] | null;
   qr_label?: string | null;
 }

@@ -42,8 +42,8 @@ export function Invitation({
   const venue = content.venue ?? null;
   const gallery = galleryUrls(content.gallery);
   const contacts = (content.contacts ?? []).filter((c) => text(c?.phone)).slice(0, 2);
-  const music = content.music;
-  const musicUrl = music?.enabled === false ? null : text(music?.url);
+  const musicEnabled = content.music_enabled !== false;
+  const musicUrl = text(content.music_url);
   const publicUrl = text(invitation?.public_url);
   const groomParents = text(content.groom_parents);
   const brideParents = text(content.bride_parents);
@@ -54,7 +54,7 @@ export function Invitation({
   return (
     <main className="relative min-h-svh overflow-x-hidden">
       <WarpField />
-      {musicUrl ? <MusicToggle url={musicUrl} title={music?.title ?? null} /> : null}
+      {musicEnabled ? <MusicToggle url={musicUrl} /> : null}
 
       {/* 1. Warp introduction */}
       <section className="flex min-h-svh flex-col items-center justify-center px-6 text-center">
