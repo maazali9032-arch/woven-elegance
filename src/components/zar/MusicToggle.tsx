@@ -2,32 +2,40 @@ import { Music, Pause } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import defaultMusic from "@/leberch-romantic-584475.mp3";
 
-/** Optional music. Never autoplays — playback begins on user interaction only. */
+/**
+ * Music playback component.
+ * - Autoplays on page load (if the tab is visible).
+ * - Pauses when the tab becomes hidden.
+ * - User can manually toggle playback via the button.
+ * - When the user disables music, it stays off until re‑enabled.
+ */
 export function MusicToggle({ url }: { url?: string | null }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [userWantsPlaying, setUserWantsPlaying] = useState(false);
+  const [userWantsPlaying, setUserWantsPlaying] = useState(true); // default on
 
   const audioSrc = url || defaultMusic;
 
+  // Try to start playback when the component mounts.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    // Only autoplay if the document is visible.
+    if (document.visibilityState === "visible") {
+      void audio.play().then(() => setPlaying(true), () => setPlaying(false));
+    }
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         audio.pause();
         setPlaying(false);
-      } else if (document.visibilityState === "visible" && userWantsPlaying) {
-        void audio.play().then(
-          () => setPlaying(true),
-          () => setPlaying(false),
-        );
+      } else if (userWantsPlaying) {
+        void audio.play().then(() => setPlaying(true), () => setPlaying(false));
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       audio.pause();
@@ -43,13 +51,7 @@ export function MusicToggle({ url }: { url?: string | null }) {
       setUserWantsPlaying(false);
     } else {
       setUserWantsPlaying(true);
-      void audio.play().then(
-        () => setPlaying(true),
-        () => {
-          setPlaying(false);
-          setUserWantsPlaying(false);
-        },
-      );
+      void audio.play().then(() => setPlaying(true), () => setPlaying(false));
     }
   };
 
@@ -57,7 +59,7 @@ export function MusicToggle({ url }: { url?: string | null }) {
 
   return (
     <>
-      <audio ref={audioRef} src={audioSrc} loop preload="none" />
+      <audio ref={audioRef} src={audioSrc} loop preload="auto" />
       <button
         type="button"
         onClick={toggle}
