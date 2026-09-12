@@ -59,7 +59,7 @@ export function MusicToggle({ url }: { url?: string | null }) {
 
   return (
     <>
-      <audio ref={audioRef} src={audioSrc} loop preload="auto" />
+      <audio ref={audioRef} src={audioSrc} loop preload="auto" autoPlay />
       <button
         type="button"
         onClick={toggle}
